@@ -1,0 +1,26 @@
+﻿@model EmailSendingWithExcel.Models.EmailTemplate
+@{
+    ViewData["Title"] = "Edit Email Template";
+}
+
+<h2>Edit Email Template</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <input type="hidden" asp-for="Id" />
+        <label>Template Name</label>
+        <input type="text" class="form-control" asp-for="TemplateName" required />
+    </div>
+
+    <div class="form-group">
+        <label>Header</label>
+        <textarea class="form-control" asp-for="Header" rows="4" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Footer</label>
+        <textarea class="form-control" asp-for="Footer" rows="4" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

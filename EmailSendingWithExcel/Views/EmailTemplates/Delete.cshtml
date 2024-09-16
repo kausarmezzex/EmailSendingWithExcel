@@ -1,0 +1,37 @@
+﻿@model EmailSendingWithExcel.Models.EmailTemplate
+@{
+    ViewData["Title"] = "Delete Email Template";
+}
+
+<h2>Delete Email Template</h2>
+
+<div>
+    <h4>Are you sure you want to delete this template?</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Template Name
+        </dt>
+        <dd class="col-sm-10">
+            @Model.TemplateName
+        </dd>
+        <dt class="col-sm-2">
+            Header
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Header
+        </dd>
+        <dt class="col-sm-2">
+            Footer
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Footer
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,50 @@
+﻿@model EmailSendingWithExcel.Models.EmailSenderViewModel
+@{
+    ViewData["Title"] = "Email Sender";
+}
+
+<h1>Email Sender</h1>
+
+<form method="post" enctype="multipart/form-data" asp-action="UploadExcel">
+    <div class="form-group">
+        <label>Select Email Template:</label>
+        <select class="form-control" asp-for="SelectedTemplateId">
+            <option value="">-- Select Template --</option>
+            @foreach (var template in Model.EmailTemplates)
+            {
+                <option value="@template.Id">@template.TemplateName</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Subject:</label>
+        <input type="text" class="form-control" asp-for="Subject" required />
+    </div>
+
+    <div class="form-group">
+        <label>Message Body:</label>
+        <textarea id="messageBody" class="form-control" asp-for="Body"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Upload Excel (Emails in First Column):</label>
+        <input type="file" name="file" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Emails</button>
+</form>
+
+@section Scripts {
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/s4sywgqzb751zzvvkfb6586d5hh05jqb5wkk448k3jw3wpcz/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        });
+    </script>
+}

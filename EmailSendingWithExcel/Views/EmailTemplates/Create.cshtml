@@ -1,0 +1,133 @@
+﻿@model EmailSendingWithExcel.Models.EmailTemplate
+@{
+    ViewData["Title"] = "Create Email Template";
+}
+
+<h2>Create Email Template</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Template Name</label>
+        <input type="text" class="form-control" asp-for="TemplateName" placeholder="Enter template name" required />
+    </div>
+
+    <div class="form-group">
+        <label>Header</label>
+        <textarea class="form-control" asp-for="Header" rows="4" placeholder="Enter email header" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Footer</label>
+        <textarea class="form-control" asp-for="Footer" rows="4" placeholder="Enter email footer" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>HTML Content</label>
+        <textarea id="htmlContent" class="form-control" asp-for="HtmlContent" rows="10" placeholder="Paste HTML content here"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Template</button>
+    <button type="button" class="btn btn-secondary" id="previewButton">Preview Template</button>
+</form>
+
+<!-- Preview Modal -->
+<div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Email Template Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="previewContent">
+                    <!-- Preview content will be injected here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- TinyMCE Script for HTML Content -->
+    <script src="https://cdn.tiny.cloud/1/s4sywgqzb751zzvvkfb6586d5hh05jqb5wkk448k3jw3wpcz/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- TinyMCE Initialization -->
+    <script>
+        tinymce.init({
+            selector: '#htmlContent',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            valid_elements: '*[*]',  // Allows all HTML elements and attributes
+            extended_valid_elements: 'h1[style],img[src|alt|style],p[style]',  // Extend valid elements with specific attributes
+        });
+
+    </script>
+
+    <!-- Preview Button Click Event -->
+    <script>
+        document.getElementById("previewButton").addEventListener("click", function () {
+            // Get the content from the fields
+            var header = document.querySelector('[name="Header"]').value;
+            var footer = document.querySelector('[name="Footer"]').value;
+            var htmlContent = tinymce.get("htmlContent").getContent();  // TinyMCE HTML content
+
+            // Function to decode HTML entities (if needed)
+            function decodeHtml(html) {
+                var txt = document.createElement("textarea");
+                txt.innerHTML = html;
+                return txt.value;
+            }
+
+            // Decode the HTML content before rendering (if necessary)
+            var decodedHtmlContent = decodeHtml(htmlContent);
+
+            // Inject the content into the modal's body using innerHTML
+            var previewContent = `
+                <div style="border: 1px solid #ccc; padding: 20px;">
+                    <div style="background-color: #007bff; padding: 10px; color: white;">
+                        ${header}
+                    </div>
+                    <div style="padding: 20px;">
+                        ${decodedHtmlContent}  <!-- This will now render correctly -->
+                    </div>
+                    <div style="background-color: #007bff; padding: 10px; color: white;">
+                        ${footer}
+                    </div>
+                </div>
+            `;
+
+            // Inject into modal using innerHTML to render the HTML content
+            document.getElementById("previewContent").innerHTML = previewContent;
+
+            // Show the modal
+            $('#previewModal').modal('show');
+        });
+
+
+    </script>
+
+    <!-- Bootstrap Modal Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Ensure modal closes -->
+    <script>
+        // Manually hide the modal (testing in case it doesn't close normally)
+        $('#previewModal').on('hidden.bs.modal', function () {
+            console.log('Modal closed successfully');
+        });
+
+        // If needed, manually close modal after button click (backup plan)
+        document.querySelectorAll('[data-dismiss="modal"]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                $('#previewModal').modal('hide');
+            });
+        });
+    </script>
+}

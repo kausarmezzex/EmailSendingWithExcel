@@ -1,0 +1,33 @@
+﻿@model IEnumerable<EmailSendingWithExcel.Models.EmailTemplate>
+@{
+    ViewData["Title"] = "Manage Email Templates";
+}
+
+<h2>Email Templates</h2>
+
+<a href="@Url.Action("Create", "EmailTemplates")" class="btn btn-primary">Create New Template</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Template Name</th>
+            <th>Header</th>
+            <th>Footer</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var template in Model)
+        {
+            <tr>
+                <td>@template.TemplateName</td>
+                <td>@template.Header</td>
+                <td>@template.Footer</td>
+                <td>
+                    <a href="@Url.Action("Edit", "EmailTemplates", new { id = template.Id })" class="btn btn-info">Edit</a>
+                    <a href="@Url.Action("Delete", "EmailTemplates", new { id = template.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
